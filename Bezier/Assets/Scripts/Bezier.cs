@@ -23,18 +23,18 @@ public class Bezier : MonoBehaviour
 	[Header("Settings")]
 	public bool threading;
 
+	// Particles
+	RectTransform[] rectParticles;
+	Vector2[] positionParticles;
+	float[] timeParticle;
+	bool[] activeParticle;
+
 	// Hidden vars
 	Vector2[] points2D;
 
 	// Shared vars
 	AutoResetEvent resetEvent;
 	Thread worker;
-
-	// Particles
-	RectTransform[] rectParticles;
-	Vector2[] positionParticles;
-	float[] timeParticles;
-	bool[] activeParticles;
 
 	float travelTimeMultiplier;
 	float timeToNextParticle;
@@ -43,6 +43,9 @@ public class Bezier : MonoBehaviour
 	int numCastParticles;
 	bool casting;
 	bool destroy;
+
+	string threadMessage;
+	bool threadDebug;
 
 	void Start()
 	{
@@ -75,14 +78,18 @@ public class Bezier : MonoBehaviour
 		// Buffers
 		positionParticles = new Vector2[maxShownParticles];
 		rectParticles = new RectTransform[maxShownParticles];
-		activeParticles = new bool[maxShownParticles];
-		timeParticles = new float[maxShownParticles];
+		activeParticle = new bool[maxShownParticles];
+		timeParticle = new float[maxShownParticles];
 	}
 	#endregion
 
 	#region Objects
 	public void CastParticles()
 	{
+		if (worker != null && worker.IsAlive) {
+			return;
+		}
+
 		// Particles instantiation.
 		for (int i = 0; i < maxShownParticles; ++i)
 		{
@@ -92,12 +99,13 @@ public class Bezier : MonoBehaviour
 			rectParticles[i] = particle.GetComponent<RectTransform>();
 			rectParticles[i].transform.SetParent(this.gameObject.transform);
 			rectParticles[i].gameObject.SetActive (false);
+			timeParticle[i] = 0f;
 		}
 
 		// First cookie properties.
 		rectParticles[0].gameObject.SetActive(true);
-		rectParticles[0].localPosition = Formulae(0f);
-		activeParticles[0] = true;
+		rectParticles[0].localPosition = Formula(0f);
+		activeParticle[0] = true;
 
 		// Start casting data.
 		numCastParticles = 1;
@@ -107,16 +115,8 @@ public class Bezier : MonoBehaviour
 		// Multithreading.
 		worker = new Thread(Run);
 		worker.IsBackground = true;
-		worker.Start();
-	
 		resetEvent = new AutoResetEvent(false);
-	}
-
-	void DestroyParticles()
-	{
-		for (int i = 0; i < maxShownParticles; ++i) {
-			Destroy(rectParticles [i].gameObject);
-		}
+		worker.Start();
 	}
 	#endregion
 
@@ -127,22 +127,33 @@ public class Bezier : MonoBehaviour
 		{
 			for (int i = 0; i < maxShownParticles; ++i)
 			{
-				if (activeParticles[i])
+				if (activeParticle[i])
 				{
 					rectParticles[i].localPosition = positionParticles[i];
 				}
-				rectParticles [i].gameObject.SetActive(activeParticles [i]);
+				rectParticles [i].gameObject.SetActive(activeParticle [i]);
 			}
 		}
 
 		if (destroy)
 		{
-			DestroyParticles();
+			for (int i = 0; i < maxShownParticles; ++i) {
+				Destroy(rectParticles [i].gameObject);
+			}
+
+			// Closing
+			resetEvent.Close ();
+			resetEvent = null;
 			destroy = false;
 		}
 
 		if (resetEvent != null)	{
 			resetEvent.Set ();
+		}
+
+		if (threadDebug) {
+			threadDebug = false;
+			Debug.Log (threadMessage);
 		}
 	}
 
@@ -174,8 +185,8 @@ public class Bezier : MonoBehaviour
 				}
 
 				// Reset particle new properties.
-				activeParticles [lastActiveCookie] = true;
-				timeParticles [lastActiveCookie] = 0.0f;
+				activeParticle [lastActiveCookie] = true;
+				timeParticle [lastActiveCookie] = 0.0f;
 				timeToNextParticle = 0.0f;
 			}	
 
@@ -184,12 +195,12 @@ public class Bezier : MonoBehaviour
 
 			for (int i = 0; i < maxShownParticles; ++i)
 			{
-				if (activeParticles [i])
+				if (activeParticle [i])
 				{
 					numActiveParticles += 1;
 
 					// Particle time.
-					float t = timeParticles [i];
+					float t = timeParticle [i];
 
 					// Particle lane offset.
 					float offset = 0;
@@ -198,15 +209,15 @@ public class Bezier : MonoBehaviour
 					if (mod == 2) offset = QuartOffset (t, -laneOffset);
 
 					// Particle new position.
-					Vector2 posParticle = Formulae (t);
+					Vector2 posParticle = Formula (t);
 					posParticle.x += offset;
 
 					positionParticles[i] = posParticle;
-					timeParticles[i] += (float) deltaTime.TotalSeconds * travelTimeMultiplier;
+					timeParticle[i] += (float) deltaTime.TotalSeconds * travelTimeMultiplier;
 
 					// On particle end point arrival.
-					if (timeParticles [i] >= 1.0f) {
-						activeParticles [i] = false;
+					if (timeParticle [i] >= 1.0f) {
+						activeParticle [i] = false;
 						numCastParticles += 1;
 					}
 				}
@@ -216,6 +227,14 @@ public class Bezier : MonoBehaviour
 			casting = (numActiveParticles > 0);
 			destroy = !casting;
 		}
+
+		ThreadDebug ("Thread Ending");
+	}
+
+	private void ThreadDebug(String message)
+	{
+		threadMessage = message;
+		threadDebug = true;
 	}
 	#endregion
 
@@ -237,7 +256,7 @@ public class Bezier : MonoBehaviour
 
 		for (int i = 0; i < curveSamples; ++i)
 		{	
-			Vector2 position = Formulae(t_accum);
+			Vector2 position = Formula(t_accum);
 
 			DrawProbe (position, t_accum, 0f, Color.white);
 			if (curveLanes >= 1) DrawProbe (position, t_accum, -laneOffset, Color.red);
@@ -256,7 +275,7 @@ public class Bezier : MonoBehaviour
 	#endregion
 
 	#region Maths
-	Vector2 Formulae(float t)
+	Vector2 Formula(float t)
 	{
 		int n = rectPoints.Length - 1;
 		Vector2 result = Vector2.zero;
