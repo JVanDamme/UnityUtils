@@ -1,13 +1,16 @@
 Random Number Generators
 ================
 
-| Algorithm                          | SD mean (σ) | Mean iterations | Exp value | Min value | Max value |
-| ---------------------------------- | ----------- | --------------- | --------- | --------- | --------- |
-| Math.Random (NodeJS)               | 32.5830     | 100 | 1000 | 842 | 1156 |
-| Crypto.GetRandomBytes (NodeJS)     | 31.6370     | 100 | 1000 | 844 | 1162|
-| Math.Random (PlayFab JS Engine)    | 32.2664     | 3   | 1000 | 871* | 1136* |
-| Math.Random (Chrome V8)            | 32.5733     | 100 | 1000 | 835 | 1162 |
-| Crypto.GetRandomValues (Chrome V8) | 31.6355     | 100 | 1000 | 851 | 1177 |
+| Algorithm                              | SD mean (σ) | Mean iterations | Exp value | Min value | Max value |
+| -------------------------------------- | ----------- | --------------- | --------- | --------- | --------- |
+| Math.Random (NodeJS)                   | 32.5830     | 100 | 1000 | 842 | 1156 |
+| Crypto.GetRandomBytes (NodeJS)         | 31.6370     | 100 | 1000 | 844 | 1162|
+| Math.Random (PlayFab JS Engine)        | 32.2664     | 3   | 1000 | 871* | 1136* |
+| Math.Random (Chrome V8)                | 32.5733     | 100 | 1000 | 835 | 1162 |
+| Crypto.GetRandomValues (Chrome V8)     | 31.6355     | 100 | 1000 | 851 | 1177 |
+| Random.NextBytes (Mono C#, clock seed) | 31.6648     | 100 | 1000 | 850 | 1165 |
+| CrypoService (Mono C#)                 | 31.6096     | 100 | 1000 | 852 | 1160 |
+| Random.Range (Unity, no seed)          | |||||
 
 - Index array length = 16384
 - Iterations per call = 16384 * 1000
