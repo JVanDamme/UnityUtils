@@ -1,6 +1,6 @@
 Random Number Generators
 ================
-| Algorithm                          | σ mean (SD) | Mean iterations | Min value | Max value |
+| Algorithm                          | SD mean (σ) | Mean iterations | Min value | Max value |
 | ---------------------------------- | ----------- | --------------- | --------- | --------- |
 | Math.Random (NodeJS)               | 32.5830     | 100 | | |
 | Crypto.GetRandomBytes (NodeJS)     | 31.6370     | 100 | | |
