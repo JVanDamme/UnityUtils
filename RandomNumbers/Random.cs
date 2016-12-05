@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Security.Cryptography;
 
@@ -9,22 +9,21 @@ public class Random : MonoBehaviour
 	uint MIN;
 	uint MAX;
 
-	// Use this for initialization
 	void Start ()
 	{
 		uint num = 100;
 		float mean = 0f;
 
-		/*ResetMinMax();
+		ResetMinMax();
 		for (int i = 0; i < num; ++i)
 		{
 			mean = mean + SystemRandom(); 
 		}	
 		mean = mean / (float) num;
 		Debug.Log("Normal deviation mean: " + mean + ", iterations: " + num);
-		Debug.Log("Min: " + MIN + ", Max: " + MAX);*/
+		Debug.Log("Min: " + MIN + ", Max: " + MAX);
 
-		/*ResetMinMax();
+		ResetMinMax();
 		mean = 0f;
 		for (int i = 0; i < num; ++i)
 		{
@@ -32,9 +31,9 @@ public class Random : MonoBehaviour
 		}	
 		mean = mean / (float) num;
 		Debug.Log("Normal deviation mean: " + mean + ", iterations: " + num);
-		Debug.Log("Min: " + MIN + ", Max: " + MAX);*/
+		Debug.Log("Min: " + MIN + ", Max: " + MAX);
 
-		/*ResetMinMax();
+		ResetMinMax();
 		mean = 0f;
 		for (int i = 0; i < num; ++i)
 		{
@@ -42,7 +41,7 @@ public class Random : MonoBehaviour
 		}	
 		mean = mean / (float) num;
 		Debug.Log("Normal deviation mean: " + mean + ", iterations: " + num);
-		Debug.Log("Min: " + MIN + ", Max: " + MAX);*/
+		Debug.Log("Min: " + MIN + ", Max: " + MAX);
 
 		ResetMinMax();
 		mean = 0f;
@@ -83,9 +82,6 @@ public class Random : MonoBehaviour
 
 	float UnityRandom()
 	{
-		//UnityEngine.Random.InitState(Int) = Initializes the random number generator state with a seed.
-		//UnityEngine.Random.Range(float, float) =
-
 		int seed = CryptoServiceProviderSeed ();
 		UnityEngine.Random.InitState(seed);
 
@@ -105,12 +101,12 @@ public class Random : MonoBehaviour
 	float WELL512Random()
 	{
 		int seed = CryptoServiceProviderSeed ();
-		WELL512.init_well(seed);
+		WELL512.Init(seed);
 
 		ushort[] array = new ushort[N];
 		for (int i = 0; i < ITERATIONS; ++i)
 		{
-			int well = (int) WELL512.well512 ();
+			int well = (int) WELL512.GetNext();
 
 			int index = 0;
 			if (well != int.MinValue) index = System.Math.Abs(well) % (int) N;
@@ -125,9 +121,6 @@ public class Random : MonoBehaviour
 
 	float SystemRandom()
 	{
-		// Random()	= Initializes a new instance of the Random class, using a time-dependent default seed value.
-		// Random(Int32) = Initializes a new instance of the Random class, using the specified seed value
-
 		byte MASK = 63;
 		ushort SHIFT = 8;
 
@@ -151,10 +144,6 @@ public class Random : MonoBehaviour
 
 	float SystemCryptographyRandom()
 	{
-		//RandomNumberGenerator() = Initializes a new instance of RandomNumberGenerator.
-		//GetBytes(Byte[]) = When overridden in a derived class, fills an array of bytes with a cryptographically
-		// strong random sequence of values.
-
 		byte MASK = 63;
 		ushort SHIFT = 8;
 
