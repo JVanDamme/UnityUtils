@@ -13,5 +13,5 @@ Random Number Generators
 | Random.Range (Unity, no seed)          | ||||
 
 - Index array length = 16384
-- Iterations per call = 16384 * 1000
+- Iterations per call = 16384 * 1000 = 16.384.000
 - Expected value per index = 1000
