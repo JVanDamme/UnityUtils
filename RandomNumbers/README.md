@@ -12,7 +12,7 @@ Random Number Generators
 | CrypoServiceProvider (Mono C#)         | 31.6096     | 100 | 852 | 1160 |
 | Random.Range (Unity, no seed)          | 32.1463     | 100 | 437 | 1169 |
 | Random.Range (Unity, CSP seed)         | 32.1351     | 100 | 431 | 1169 |
-| WELL512 (CSP seed)                     |      | 100 | | |
+| WELL512 (CSP seed, per iteration)      | 31.62182    | 100 | 850 | 1160 |
 
 
 - Index array length = 16384
