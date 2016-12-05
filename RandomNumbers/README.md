@@ -1,5 +1,9 @@
 Random Number Generators
 ================
+Index array length = 16384
+Iterations per call = 16384 * 1000
+Expected value per index = 1000
+
 | Algorithm                          | SD mean (σ) | Mean iterations | Exp value | Min value | Max value |
 | ---------------------------------- | ----------- | --------------- | --------- | --------- | --------- |
 | Math.Random (NodeJS)               | 32.5830     | 100 | 1000 | | |
