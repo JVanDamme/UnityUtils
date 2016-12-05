@@ -1,6 +1,6 @@
 Random Number Generators
 ================
-| Algorithm                     | SD            |
-| ------------------------------| ------------- |
-| Content Cell                  | Content Cell  |
-| Content Cell                  | Content Cell  |
+| Algorithm                       | Standard Deviation |
+| ------------------------------- | ------------------ |
+| Math.Random (NodeJS)            | 32.5830            |
+| Crypto.GetRandomBytes (NodeJS)  | 31.6370            |
