@@ -1,11 +1,25 @@
 var N = 16384;
-var ITERATIONS = ITERATIONS = 16384 * 1000;
+var ITERATIONS = 16384 * 1000;
+var MIN = 0;
+var MAX = 0;
+
+function ResetMinMax()
+{
+	MIN = 2000;
+	MAX = 0;
+}
+
+function GetMinMax(array)
+{
+	for (var i = 0; i < array.length; ++i)
+	{
+		if (array[i] < MIN && array[i] != 0) MIN = array[i];	
+		if (array[i] > MAX) MAX = array[i];
+	}	
+}
 
 function GetRandom()
 {	
-	//console.log("N, ITERATIONS: " + N + ", " + ITERATIONS + ".");
-
-	// Normal Randoms
 	var array = Array.apply(null, Array(N)).map(function (x, i) { return 0; })
 	
 	for (var i = 0; i < ITERATIONS; i++)
@@ -13,6 +27,8 @@ function GetRandom()
 		var index = Math.floor((Math.random() * N) + 1);
 		array[index] += 1;
 	}
+	
+	GetMinMax(array);	
 
 	var mean = Mean(array, N);
 	var deviation = Deviation(array, mean, N);
@@ -24,8 +40,6 @@ function GetRandom()
 
 function GetRandomCrypto()
 {	
-	//console.log("N, ITERATIONS: " + N + ", " + ITERATIONS + ".");
-
 	var MASK = 63;
 	var array = Array.apply(null, Array(N)).map(function (x, i) { return 0; })
 	var cryptoBytes = crypto.randomBytes(ITERATIONS*2);
@@ -36,10 +50,42 @@ function GetRandomCrypto()
 		array[index] += 1;
 	}
 
+	GetMinMax(array);
+
 	var mean = Mean(array, N);
 	var deviation = Deviation(array, mean, N);
 	//console.log("Mean: " + mean + ", deviation: " + deviation);
 
+	//WriteOutput(array, "testCrypto.txt");
+	return deviation;
+}
+
+function GetRandomCryptoValues()
+{	
+	var MASK = 16383;
+	var B_16_MAX_ARRAY_LENGTH = 32768;
+	var NEW_ITERATIONS = ITERATIONS / B_16_MAX_ARRAY_LENGTH;
+
+	var array = Array.apply(null, Array(N)).map(function (x, i) { return 0; })
+
+	for (var j = 0; j < NEW_ITERATIONS; ++j)
+	{
+		var cryptoBytes = window.crypto.getRandomValues(new Uint16Array(B_16_MAX_ARRAY_LENGTH));
+		
+		for (var i = 0; i < cryptoBytes.length; ++i)
+		{ 
+			var index = cryptoBytes[i] & MASK;
+			array[index] += 1;
+		}
+	}
+
+	GetMinMax(array);
+
+	var mean = Mean(array, N);
+	var deviation = Deviation(array, mean, N);
+	//console.log("Mean: " + mean + ", deviation: " + deviation);
+
+	//return array;
 	//WriteOutput(array, "testCrypto.txt");
 	return deviation;
 }
@@ -82,6 +128,8 @@ function Mean(array, n)
 function RandomAlgorithmsDeviationMean()
 {
 	var num = 100;
+	
+	ResetMinMax();
 	var mean = 0;
 	for (var i = 0; i < num; ++i)
 	{
@@ -89,7 +137,9 @@ function RandomAlgorithmsDeviationMean()
 	}	
 	mean = mean / num;
 	console.log("Normal deviation mean: " + mean + ", iterations: " + num);
+	console.log("Min: " + MIN + ", Max: " + MAX);
 
+	ResetMinMax();
 	mean = 0;
 	for (i = 0; i < num; i++)
 	{
@@ -97,6 +147,17 @@ function RandomAlgorithmsDeviationMean()
 	}	
 	mean = mean / num;
 	console.log("Crypto deviation mean: " + mean + ", iterations: " + num);
+	console.log("Min: " + MIN + ", Max: " + MAX);
+
+	ResetMinMax();
+	mean = 0;
+	for (i = 0; i < num; i++)
+	{
+		mean += GetRandomCryptoValues(); 
+	}	
+	mean = mean / num;
+	console.log("Crypto deviation mean: " + mean + ", iterations: " + num);
+	console.log("Min: " + MIN + ", Max: " + MAX);
 }
 
 RandomAlgorithmsDeviationMean();
