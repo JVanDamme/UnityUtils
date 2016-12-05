@@ -9,10 +9,10 @@ Random Number Generators
 | Math.Random (Chrome V8)                | 32.5733     | 100 | 835 | 1162 |
 | Crypto.GetRandomValues (Chrome V8)     | 31.6355     | 100 | 851 | 1177 |
 | Random.NextBytes (Mono C#, clock seed) | 31.6648     | 100 | 850 | 1165 |
-| CrypoServiceProvider (Mono C#)         | 31.6096     | 100 | 852 | 1160 |
+| CrypoServiceProvider (Mono C#)         | **31.6096**     | 100 | 852 | 1160 |
 | Random.Range (Unity, no seed)          | 32.1463     | 100 | 437 | 1169 |
 | Random.Range (Unity, CSP seed)         | 32.1351     | 100 | 431 | 1169 |
-| WELL512 (CSP seed, per iteration)      | 31.62182    | 100 | 850 | 1160 |
+| WELL512 (CSP seed, per iteration)      | 31.6218     | 100 | 850 | 1160 |
 
 
 - Index array length = 16384
