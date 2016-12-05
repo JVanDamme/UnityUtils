@@ -18,4 +18,4 @@ Random Number Generators
 - Index array length = 16384
 - Iterations per call = 16384 * 1000 = 16.384.000
 - Expected value per index = 1000
-- PlayFab uses V8 Engine.
+- PlayFab uses the latest V8 Engine.
