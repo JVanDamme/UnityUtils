@@ -9,6 +9,6 @@ Random Number Generators
 | Math.Random (Chrome V8)            | 32.5733     | 100 | 1000 | | |
 | Crypto.GetRandomValues (Chrome V8) | 31.6355     | 100 | 1000 | | |
 
-Index array length = 16384;
-Iterations per call = 16384 * 1000;
-Expected value per index = 1000;
+- Index array length = 16384
+- Iterations per call = 16384 * 1000
+- Expected value per index = 1000
