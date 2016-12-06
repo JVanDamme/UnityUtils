@@ -12,10 +12,10 @@ Random Number Generators
 | CrypoServiceProvider (Mono)            | **31.6096** | 100   | 852 | 1160 |
 | Random.Range (Unity, no seed)          | 32.1463     | 100   | 437 | 1169 |
 | Random.Range (Unity, CSP seed)         | 32.1351     | 100   | 431 | 1169 |
-| WELL512 (CSP seed, per iteration)      | 31.6218     | 100   | 850 | 1160 |
+| WELL512 (CSP seed, per call)           | 31.6218     | 100   | 850 | 1160 |
 
 
-- Index array length = 16384
-- Iterations per call = 16384 * 1000 = 16.384.000
-- Expected value per index = 1000
+- Index array length = 16.384
+- Iterations per call = 16.384 * 1.000 = 16.384.000
+- Expected index value per call = 1000
 - PlayFab uses the latest V8 Engine.
